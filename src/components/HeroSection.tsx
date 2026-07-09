@@ -16,7 +16,7 @@ export default function HeroSection() {
       <div id="hero-actions" className="flex flex-col sm:flex-row justify-center gap-4">
         <Link
           id="hero-primary-cta"
-          to="/solution-match"
+         to="/login"
           className="inline-flex items-center justify-center px-6 py-3 bg-neutral-900 border border-transparent text-sm font-semibold rounded-md text-white hover:bg-neutral-800 transition duration-155 ease-in-out uppercase tracking-wider"
         >
           Encontrar Mi Solución
