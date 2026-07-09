@@ -220,7 +220,7 @@ export default function HomePage() {
 
           <Link
             id="hero-secondary-cta"
-            to="/pricing"
+            to="/login"
             className="rounded border border-neutral-200 bg-white px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-neutral-800 transition-all duration-150 hover:bg-neutral-50"
           >
             Explore portfolio
