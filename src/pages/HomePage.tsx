@@ -578,7 +578,7 @@ export default function HomePage() {
             <div id="cta-buttons" className="flex flex-wrap justify-center gap-4 pt-4">
               <Link
                 id="cta-primary-btn"
-                to="/solution-match"
+               to="/login"
                 className="whitespace-nowrap rounded bg-white px-6 py-3 text-xs font-bold uppercase tracking-wider text-neutral-950 transition hover:bg-neutral-100"
               >
                 Find My Solution
