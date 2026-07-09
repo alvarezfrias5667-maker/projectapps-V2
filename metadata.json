@@ -1,0 +1,6 @@
+{
+  "name": "ProjectApps",
+  "description": "ProjectApps™ Business Asset Commerce Platform™ - Aplicaciones empresariales listas para implementar y activos digitales validados.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
