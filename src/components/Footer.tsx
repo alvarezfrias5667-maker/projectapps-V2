@@ -45,21 +45,6 @@ export default function Footer() {
             </Link>
           </div>
 
-          {/* Portfolio */}
-          <FooterColumn
-            title="Portfolio"
-            links={[
-              {
-                label: "Portfolio",
-                to: "/portfolio",
-              },
-              {
-                label: "Categories",
-                to: "/portfolio#portfolio-categories",
-              },
-            ]}
-          />
-
           {/* Acquisition */}
           <FooterColumn
             title="Acquisition"
