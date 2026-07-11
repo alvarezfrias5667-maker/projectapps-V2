@@ -18,10 +18,6 @@ import { appRoutes } from "./routes/appRoutes";
 
 const navigationItems = [
   {
-    label: "Portfolio",
-    to: "/portfolio",
-  },
-  {
     label: "Process",
     to: "/acquisition-process",
   },
