@@ -87,10 +87,10 @@ Message: ${formData.mensaje}`;
             View Acquisition Process
           </Link>
           <Link
-            to="/pricing"
+            to="/"
             className="px-8 py-3 bg-white hover:bg-neutral-50 text-neutral-500 border border-neutral-200 text-xs font-bold uppercase tracking-widest rounded transition"
           >
-            Explore Portfolio
+            Home
           </Link>
         </div>
       </section>
