@@ -1,6 +1,16 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 
+type FooterLink = {
+  label: string;
+  to: string;
+};
+
+type FooterColumnProps = {
+  title: string;
+  links: FooterLink[];
+};
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
@@ -15,6 +25,7 @@ export default function Footer() {
           <div className="space-y-5 md:col-span-5">
             <Link
               to="/"
+              aria-label="ProjectApps home"
               className="inline-flex items-center text-sm font-black tracking-widest text-neutral-950"
             >
               PROJECTAPPS™
@@ -27,9 +38,9 @@ export default function Footer() {
 
             <Link
               to="/transaction-protection"
-              className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-neutral-700 transition hover:border-neutral-400 hover:text-neutral-950"
+              className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-neutral-700 transition-colors hover:border-neutral-400 hover:text-neutral-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
             >
-              <ShieldCheck className="h-3.5 w-3.5" />
+              <ShieldCheck aria-hidden="true" className="h-3.5 w-3.5" />
               Transaction Protection™
             </Link>
           </div>
@@ -38,10 +49,14 @@ export default function Footer() {
           <FooterColumn
             title="Portfolio"
             links={[
-              { label: "Portfolio", to: "/pricing" },
-              { label: "Categories", to: "/pricing#portfolio-categories" },
-              { label: "Buyer Portal™", to: "/dashboard" },
-              { label: "Export Center™", to: "/export-center" },
+              {
+                label: "Portfolio",
+                to: "/portfolio",
+              },
+              {
+                label: "Categories",
+                to: "/portfolio#portfolio-categories",
+              },
             ]}
           />
 
@@ -49,11 +64,26 @@ export default function Footer() {
           <FooterColumn
             title="Acquisition"
             links={[
-              { label: "Process", to: "/acquisition-process" },
-              { label: "What You Receive", to: "/what-you-receive" },
-              { label: "Protection", to: "/transaction-protection" },
-              { label: "FAQ", to: "/faq" },
-              { label: "Contact", to: "/contact" },
+              {
+                label: "Process",
+                to: "/acquisition-process",
+              },
+              {
+                label: "What You Receive",
+                to: "/what-you-receive",
+              },
+              {
+                label: "Protection",
+                to: "/transaction-protection",
+              },
+              {
+                label: "FAQ",
+                to: "/faq",
+              },
+              {
+                label: "Contact",
+                to: "/contact",
+              },
             ]}
           />
 
@@ -61,10 +91,22 @@ export default function Footer() {
           <FooterColumn
             title="Legal"
             links={[
-              { label: "Privacy", to: "/legal/privacy" },
-              { label: "Terms", to: "/legal/terms" },
-              { label: "Disclaimer", to: "/legal/disclaimer" },
-              { label: "Login", to: "/login" },
+              {
+                label: "Privacy",
+                to: "/legal/privacy",
+              },
+              {
+                label: "Terms",
+                to: "/legal/terms",
+              },
+              {
+                label: "Disclaimer",
+                to: "/legal/disclaimer",
+              },
+              {
+                label: "Login",
+                to: "/login",
+              },
             ]}
           />
         </div>
@@ -74,10 +116,10 @@ export default function Footer() {
 
           <Link
             to="/contact"
-            className="inline-flex items-center gap-1 text-neutral-500 transition hover:text-neutral-950"
+            className="inline-flex items-center gap-1 text-neutral-500 transition-colors hover:text-neutral-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
           >
             Request availability
-            <ArrowRight className="h-3 w-3" />
+            <ArrowRight aria-hidden="true" className="h-3 w-3" />
           </Link>
         </div>
       </div>
@@ -85,15 +127,9 @@ export default function Footer() {
   );
 }
 
-function FooterColumn({
-  title,
-  links,
-}: {
-  title: string;
-  links: { label: string; to: string }[];
-}) {
+function FooterColumn({ title, links }: FooterColumnProps) {
   return (
-    <nav className="space-y-4 md:col-span-2">
+    <nav aria-label={`${title} navigation`} className="space-y-4 md:col-span-2">
       <h2 className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
         {title}
       </h2>
@@ -101,9 +137,9 @@ function FooterColumn({
       <div className="flex flex-col space-y-2.5">
         {links.map((link) => (
           <Link
-            key={`${title}-${link.label}`}
+            key={`${title}-${link.to}`}
             to={link.to}
-            className="text-xs font-semibold text-neutral-500 transition hover:text-neutral-950"
+            className="text-xs font-semibold text-neutral-500 transition-colors hover:text-neutral-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
           >
             {link.label}
           </Link>
