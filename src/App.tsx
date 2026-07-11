@@ -1,156 +1,223 @@
-import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
-import { appRoutes } from "./routes/appRoutes";
-import Footer from "./components/Footer";
+import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import {
+  BrowserRouter,
+  Link,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { Globe, Menu, X } from "lucide-react";
-import { useState, useEffect, ReactNode } from "react";
+
+import Footer from "./components/Footer";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthProvider";
 import { useAuth } from "./hooks/useAuth";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import { appRoutes } from "./routes/appRoutes";
+
+const navigationItems = [
+  {
+    label: "Portfolio",
+    to: "/portfolio",
+  },
+  {
+    label: "Process",
+    to: "/acquisition-process",
+  },
+  {
+    label: "Protection",
+    to: "/transaction-protection",
+  },
+  {
+    label: "FAQ",
+    to: "/faq",
+  },
+  {
+    label: "Contact",
+    to: "/contact",
+  },
+] as const;
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
+
   const { user } = useAuth();
   const location = useLocation();
 
-  // Scroll to top on navigation path change
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [location.pathname]);
+    setIsOpen(false);
+  }, [location.pathname, location.search]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [isOpen]);
+
+  const accountPath = user ? "/dashboard" : "/login";
+  const accountLabel = user ? "Buyer Portal™" : "Login";
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center space-x-2 text-neutral-900 group">
-          <Globe className="h-5 w-5 text-neutral-800 transition-transform group-hover:rotate-12 duration-300" />
-          <span className="font-extrabold tracking-wider text-xs sm:text-sm uppercase">
+    <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/90 backdrop-blur-md">
+      <div className="mx-auto flex min-h-[72px] max-w-6xl items-center justify-between px-6 md:px-12">
+        <Link
+          to="/"
+          aria-label="ProjectApps home"
+          className="group inline-flex shrink-0 items-center gap-2 text-neutral-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-4"
+        >
+          <Globe
+            aria-hidden="true"
+            className="h-5 w-5 text-neutral-800 transition-transform duration-300 group-hover:rotate-12"
+          />
+
+          <span className="text-xs font-extrabold uppercase tracking-wider sm:text-sm">
             PROJECTAPPS™
           </span>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-6 text-xs font-semibold uppercase tracking-wider text-neutral-500">
-          <Link
-            to="/pricing"
-            className={`transition-colors duration-155 ${location.pathname === "/pricing" ? "text-neutral-950 font-bold" : "hover:text-neutral-950"}`}
-          >
-            Portfolio
-          </Link>
-          <Link
-            to="/acquisition-process"
-            className={`transition-colors duration-155 ${location.pathname === "/acquisition-process" ? "text-neutral-950 font-bold" : "hover:text-neutral-950"}`}
-          >
-            Process
-          </Link>
-          <Link
-            to="/transaction-protection"
-            className={`transition-colors duration-155 ${location.pathname === "/transaction-protection" ? "text-neutral-950 font-bold" : "hover:text-neutral-950"}`}
-          >
-            Protection
-          </Link>
-          <Link
-            to="/faq"
-            className={`transition-colors duration-155 ${location.pathname === "/faq" ? "text-neutral-950 font-bold" : "hover:text-neutral-950"}`}
-          >
-            FAQ
-          </Link>
-          <Link
-            to="/contact"
-            className={`transition-colors duration-155 ${location.pathname === "/contact" ? "text-neutral-950 font-bold" : "hover:text-neutral-950"}`}
-          >
-            Contact
-          </Link>
-          {user ? (
-            <Link
-              to="/dashboard"
-              className="px-3.5 py-1.5 bg-neutral-950 text-white hover:bg-neutral-800 rounded-lg transition duration-155 text-[10px] font-bold tracking-widest uppercase shrink-0"
+        <nav
+          aria-label="Primary navigation"
+          className="hidden items-center gap-6 text-xs font-semibold uppercase tracking-wider md:flex"
+        >
+          {navigationItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                [
+                  "transition-colors duration-200",
+                  "focus-visible:outline-none",
+                  "focus-visible:ring-2",
+                  "focus-visible:ring-neutral-950",
+                  "focus-visible:ring-offset-4",
+                  isActive
+                    ? "font-bold text-neutral-950"
+                    : "text-neutral-500 hover:text-neutral-950",
+                ].join(" ")
+              }
             >
-              Buyer Portal™
-            </Link>
-          ) : (
-            <Link
-              to="/login"
-              className="px-3.5 py-1.5 bg-neutral-100 text-neutral-950 hover:bg-neutral-200 rounded-lg transition duration-155 text-[10px] font-bold tracking-widest uppercase shrink-0 border border-neutral-200"
-            >
-              Login
-            </Link>
-          )}
+              {item.label}
+            </NavLink>
+          ))}
+
+          <Link
+            to={accountPath}
+            className={[
+              "shrink-0 rounded-lg border px-3.5 py-2",
+              "text-[10px] font-bold uppercase tracking-widest",
+              "transition-colors duration-200",
+              "focus-visible:outline-none",
+              "focus-visible:ring-2",
+              "focus-visible:ring-neutral-950",
+              "focus-visible:ring-offset-2",
+              user
+                ? "border-neutral-950 bg-neutral-950 text-white hover:bg-neutral-800"
+                : "border-neutral-200 bg-neutral-100 text-neutral-950 hover:bg-neutral-200",
+            ].join(" ")}
+          >
+            {accountLabel}
+          </Link>
         </nav>
 
-        {/* Mobile Toggle */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-neutral-800 focus:outline-none"
+          type="button"
+          aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isOpen}
+          aria-controls="mobile-navigation"
+          onClick={() => setIsOpen((current) => !current)}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md text-neutral-800 transition-colors hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 md:hidden"
         >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {isOpen ? (
+            <X aria-hidden="true" className="h-5 w-5" />
+          ) : (
+            <Menu aria-hidden="true" className="h-5 w-5" />
+          )}
         </button>
       </div>
 
-      {/* Mobile Nav Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-b border-neutral-200 py-4 px-6 space-y-3 flex flex-col text-xs font-semibold uppercase tracking-wider">
-          <Link
-            to="/pricing"
-            onClick={() => setIsOpen(false)}
-            className={`py-1 ${location.pathname === "/pricing" ? "text-neutral-950 font-bold" : "text-neutral-500"}`}
-          >
-            Portfolio
-          </Link>
-          <Link
-            to="/acquisition-process"
-            onClick={() => setIsOpen(false)}
-            className={`py-1 ${location.pathname === "/acquisition-process" ? "text-neutral-950 font-bold" : "text-neutral-500"}`}
-          >
-            Process
-          </Link>
-          <Link
-            to="/transaction-protection"
-            onClick={() => setIsOpen(false)}
-            className={`py-1 ${location.pathname === "/transaction-protection" ? "text-neutral-950 font-bold" : "text-neutral-500"}`}
-          >
-            Protection
-          </Link>
-          <Link
-            to="/faq"
-            onClick={() => setIsOpen(false)}
-            className={`py-1 ${location.pathname === "/faq" ? "text-neutral-950 font-bold" : "text-neutral-500"}`}
-          >
-            FAQ
-          </Link>
-          <Link
-            to="/contact"
-            onClick={() => setIsOpen(false)}
-            className={`py-1 ${location.pathname === "/contact" ? "text-neutral-950 font-bold" : "text-neutral-500"}`}
-          >
-            Contact
-          </Link>
-          {user ? (
-            <Link
-              to="/dashboard"
-              onClick={() => setIsOpen(false)}
-              className="py-2.5 px-4 bg-neutral-950 text-white rounded-lg text-center font-bold tracking-widest uppercase text-[10px]"
+        <nav
+          id="mobile-navigation"
+          aria-label="Mobile navigation"
+          className="flex flex-col gap-1 border-t border-neutral-200 bg-white px-6 py-4 text-xs font-semibold uppercase tracking-wider md:hidden"
+        >
+          {navigationItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                [
+                  "rounded-md px-2 py-2",
+                  "transition-colors duration-200",
+                  "focus-visible:outline-none",
+                  "focus-visible:ring-2",
+                  "focus-visible:ring-neutral-950",
+                  isActive
+                    ? "font-bold text-neutral-950"
+                    : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-950",
+                ].join(" ")
+              }
             >
-              Buyer Portal™
-            </Link>
-          ) : (
-            <Link
-              to="/login"
-              onClick={() => setIsOpen(false)}
-              className="py-2.5 px-4 bg-neutral-100 text-neutral-950 rounded-lg text-center font-bold tracking-widest uppercase text-[10px] border border-neutral-200"
-            >
-              Login
-            </Link>
-          )}
-        </div>
+              {item.label}
+            </NavLink>
+          ))}
+
+          <Link
+            to={accountPath}
+            className={[
+              "mt-2 rounded-lg border px-4 py-3 text-center",
+              "text-[10px] font-bold uppercase tracking-widest",
+              "transition-colors duration-200",
+              "focus-visible:outline-none",
+              "focus-visible:ring-2",
+              "focus-visible:ring-neutral-950",
+              user
+                ? "border-neutral-950 bg-neutral-950 text-white hover:bg-neutral-800"
+                : "border-neutral-200 bg-neutral-100 text-neutral-950 hover:bg-neutral-200",
+            ].join(" ")}
+          >
+            {accountLabel}
+          </Link>
+        </nav>
       )}
     </header>
   );
 }
 
+function ScrollToTop() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+  }, [location.pathname]);
+
+  return null;
+}
+
 function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-white text-neutral-900 flex flex-col font-sans antialiased selection:bg-neutral-900 selection:text-white">
+    <div className="flex min-h-screen flex-col bg-white font-sans text-neutral-900 antialiased selection:bg-neutral-900 selection:text-white">
       <Header />
+
       <main className="flex-grow">{children}</main>
+
       <Footer />
     </div>
   );
@@ -160,23 +227,26 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <ScrollToTop />
+
         <Layout>
           <Routes>
             {appRoutes.map((route) => {
-              const Element = route.element;
+              const PageComponent = route.element;
+
               return (
                 <Route
+                  key={route.path}
                   path={route.path}
                   element={
                     route.protected ? (
                       <ProtectedRoute>
-                        <Element />
+                        <PageComponent />
                       </ProtectedRoute>
                     ) : (
-                      <Element />
+                      <PageComponent />
                     )
                   }
-                  {...({ key: route.path } as any)}
                 />
               );
             })}
