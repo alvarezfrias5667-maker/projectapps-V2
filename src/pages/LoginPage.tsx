@@ -1,9 +1,10 @@
-import React, { useState, FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, FormEvent, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Globe, ArrowRight, ShieldAlert } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { buyerService } from "../services/buyerService";
 import { evaluationService } from "../services/evaluationService";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -11,13 +12,24 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { user, loading } = useAuth();
+
+  const redirectPath = searchParams.get("redirect") || "/dashboard";
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (!loading && user) {
+      navigate(redirectPath);
+    }
+  }, [user, loading, redirectPath, navigate]);
 
   const handleGoogleLogin = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/dashboard`
+          redirectTo: `${window.location.origin}/login?redirect=${encodeURIComponent(redirectPath)}`
         }
       });
       if (error) throw error;
@@ -40,7 +52,7 @@ export default function LoginPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`
+            emailRedirectTo: `${window.location.origin}/login?redirect=${encodeURIComponent(redirectPath)}`
           }
         });
         if (error) throw error;
@@ -48,7 +60,7 @@ export default function LoginPage() {
           await buyerService.ensureProfile(data.user.id, email);
           setMessage("Registration successful! Redirecting...");
           setTimeout(() => {
-            navigate("/dashboard");
+            navigate(redirectPath);
           }, 1000);
         } else {
           setMessage("Check your email to confirm registration or sign in.");
@@ -67,7 +79,7 @@ export default function LoginPage() {
               email,
               password,
               options: {
-                emailRedirectTo: `${window.location.origin}/dashboard`
+                emailRedirectTo: `${window.location.origin}/login?redirect=${encodeURIComponent(redirectPath)}`
               }
             });
             if (signUpError) throw signUpError;
@@ -99,7 +111,7 @@ export default function LoginPage() {
               }
 
               setTimeout(() => {
-                navigate("/dashboard");
+                navigate(redirectPath);
               }, 1000);
               return;
             }
@@ -135,7 +147,7 @@ export default function LoginPage() {
 
           setMessage("Access verified. Redirecting...");
           setTimeout(() => {
-            navigate("/dashboard");
+            navigate(redirectPath);
           }, 800);
         }
       }
