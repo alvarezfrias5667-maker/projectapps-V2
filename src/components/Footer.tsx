@@ -88,10 +88,6 @@ export default function Footer() {
                 label: "Disclaimer",
                 to: "/legal/disclaimer",
               },
-              {
-                label: "Login",
-                to: "/login",
-              },
             ]}
           />
         </div>
