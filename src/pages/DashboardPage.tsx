@@ -126,13 +126,6 @@ export default function DashboardPage() {
               Access Buyer Portal™
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
-
-            <Link
-              to="/solution-match"
-              className="text-xs font-bold text-neutral-500 hover:text-neutral-950 transition uppercase tracking-wider"
-            >
-              Take Solution Compatibility Test
-            </Link>
           </div>
         </div>
       </div>
@@ -159,14 +152,6 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex gap-3">
-            <Link
-              to="/solution-match"
-              className="px-5 py-2.5 bg-neutral-50 border border-neutral-200 hover:border-neutral-400 text-neutral-900 text-[11px] font-bold uppercase tracking-wider rounded-xl transition flex items-center gap-1.5"
-            >
-              <Compass className="h-3.5 w-3.5" />
-              New Evaluation
-            </Link>
-
             <button
               onClick={handleLogout}
               className="px-5 py-2.5 bg-neutral-950 hover:bg-neutral-800 text-white text-[11px] font-bold uppercase tracking-wider rounded-xl transition flex items-center gap-1.5"
@@ -191,9 +176,7 @@ export default function DashboardPage() {
               {savedEvaluations.length === 0 ? (
                 <EmptyState
                   title="No saved evaluations."
-                  text="Begin an executive assessment to evaluate which software asset categories match your business profile."
-                  actionLabel="Start Evaluation"
-                  actionTo="/solution-match"
+                  text="Check back here once you have completed an executive assessment on the homepage."
                 />
               ) : (
                 <div className="space-y-4">
@@ -253,9 +236,7 @@ export default function DashboardPage() {
               {savedAssets.length === 0 ? (
                 <EmptyState
                   title="No saved assets."
-                  text="Explore our software portfolio and bookmark systems that you would like to inspect or acquire."
-                  actionLabel="Explore Portfolio"
-                  actionTo="/pricing"
+                  text="Explore systems on the homepage and bookmark assets to inspect or acquire."
                 />
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -298,13 +279,6 @@ export default function DashboardPage() {
                         </span>
                         <span className="font-bold text-neutral-800">{asset.estimatedTime}</span>
                       </div>
-
-                      <Link
-                        to="/contact"
-                        className="w-full text-center py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-[9px] font-bold uppercase tracking-widest rounded transition"
-                      >
-                        Request Availability
-                      </Link>
                     </div>
                   ))}
                 </div>
@@ -328,14 +302,6 @@ export default function DashboardPage() {
               <p className="text-[11px] text-neutral-500 font-light leading-relaxed">
                 Review, print, and export your saved buyer intelligence diagnostics to clipboard or print documents.
               </p>
-
-              <Link
-                to="/export-center"
-                className="w-full text-center py-2.5 bg-neutral-950 hover:bg-neutral-800 text-white text-[10px] font-bold uppercase tracking-widest rounded-lg transition inline-flex items-center justify-center gap-1.5"
-              >
-                <span>Open Export Center™</span>
-                <ArrowRight className="h-3 w-3" />
-              </Link>
             </section>
 
             <section className="space-y-4">
@@ -344,9 +310,7 @@ export default function DashboardPage() {
               {acquisitionRequests.length === 0 ? (
                 <EmptyState
                   title="No active requests."
-                  text="When you request availability for a software asset, your acquisition status will be displayed here."
-                  actionLabel="Request Asset"
-                  actionTo="/contact"
+                  text="When you request availability for a software asset on the homepage, your acquisition status will be displayed here."
                 />
               ) : (
                 <div className="space-y-4">
@@ -449,8 +413,8 @@ function EmptyState({
 }: {
   title: string;
   text: string;
-  actionLabel: string;
-  actionTo: string;
+  actionLabel?: string;
+  actionTo?: string;
 }) {
   return (
     <div className="bg-neutral-50 rounded-xl p-8 text-center border border-dashed border-neutral-300">
@@ -459,13 +423,15 @@ function EmptyState({
         {text}
       </p>
 
-      <Link
-        to={actionTo}
-        className="inline-flex items-center gap-1 text-xs font-bold text-neutral-900 hover:underline uppercase tracking-wider"
-      >
-        {actionLabel}
-        <ArrowRight className="h-3.5 w-3.5" />
-      </Link>
+      {actionLabel && actionTo && (
+        <Link
+          to={actionTo}
+          className="inline-flex items-center gap-1 text-xs font-bold text-neutral-900 hover:underline uppercase tracking-wider"
+        >
+          {actionLabel}
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      )}
     </div>
   );
 }
