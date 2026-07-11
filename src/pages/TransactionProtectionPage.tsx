@@ -293,10 +293,10 @@ export default function TransactionProtectionPage() {
           </p>
           <div className="pt-2 flex flex-col sm:flex-row justify-center gap-4">
             <Link
-              to="/solution-match"
+              to="/"
               className="px-8 py-3 bg-white text-neutral-950 hover:bg-neutral-100 text-xs font-bold uppercase tracking-wider rounded-xl transition"
             >
-              Find My Solution
+              Home
             </Link>
             <Link
               to="/contact"
