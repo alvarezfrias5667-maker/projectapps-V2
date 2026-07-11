@@ -1,4 +1,4 @@
-import React from "react";
+                import React from "react";
 import { Link } from "react-router-dom";
 import { 
   ShieldCheck, 
@@ -256,10 +256,10 @@ export default function WhatYouReceivePage() {
             </p>
             <div className="pt-4 flex flex-wrap justify-center gap-4">
               <Link
-                to="/pricing"
+                to="/"
                 className="px-6 py-3 bg-white text-neutral-950 text-xs font-bold uppercase tracking-wider rounded hover:bg-neutral-100 transition inline-flex items-center gap-2"
               >
-                See Full Catalog <ArrowRight className="h-4 w-4" />
+                Home <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 to="/contact"
