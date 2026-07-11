@@ -491,10 +491,10 @@ export default function AcquisitionProcessPage() {
             
             <div className="flex flex-wrap justify-center gap-4 pt-4">
               <Link
-                to="/pricing"
+                to="/"
                 className="px-6 py-3 bg-white text-neutral-950 text-xs font-bold uppercase tracking-wider rounded hover:bg-neutral-100 transition whitespace-nowrap"
               >
-                Explore Portfolio
+                Home
               </Link>
               <Link
                 to="/contact"
