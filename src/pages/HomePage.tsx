@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import {
   Activity,
   AlertCircle,
@@ -25,6 +26,11 @@ import {
 } from "lucide-react";
 
 export default function HomePage() {
+  const { user } = useAuth();
+
+  const primaryPath = user ? "/solution-match" : "/login?redirect=/solution-match";
+  const secondaryPath = user ? "/pricing" : "/login?redirect=/portfolio";
+
   const capabilities = [
     {
       title: "Sales & Revenue",
@@ -212,7 +218,7 @@ export default function HomePage() {
         <div id="hero-cta-group" className="flex flex-wrap justify-center gap-4 pt-4">
           <Link
             id="hero-primary-cta"
-            to="/solution-match"
+            to={primaryPath}
             className="inline-flex items-center gap-2 rounded bg-neutral-900 px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition-all duration-150 hover:bg-neutral-800"
           >
             Find my solution <ArrowRight className="h-4 w-4" />
@@ -220,7 +226,7 @@ export default function HomePage() {
 
           <Link
             id="hero-secondary-cta"
-            to="/login"
+            to={secondaryPath}
             className="rounded border border-neutral-200 bg-white px-8 py-3.5 text-xs font-bold uppercase tracking-widest text-neutral-800 transition-all duration-150 hover:bg-neutral-50"
           >
             Explore portfolio
@@ -578,7 +584,7 @@ export default function HomePage() {
             <div id="cta-buttons" className="flex flex-wrap justify-center gap-4 pt-4">
               <Link
                 id="cta-primary-btn"
-               to="/login"
+                to={primaryPath}
                 className="whitespace-nowrap rounded bg-white px-6 py-3 text-xs font-bold uppercase tracking-wider text-neutral-950 transition hover:bg-neutral-100"
               >
                 Find My Solution
@@ -586,7 +592,7 @@ export default function HomePage() {
 
               <Link
                 id="cta-secondary-btn"
-                to="/pricing"
+                to={secondaryPath}
                 className="whitespace-nowrap rounded border border-neutral-700 bg-neutral-800 px-6 py-3 text-xs font-bold uppercase tracking-wider text-neutral-200 transition hover:text-white"
               >
                 Explore Portfolio
