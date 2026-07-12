@@ -32,14 +32,17 @@ export const appRoutes: RouteConfig[] = [
   {
     path: "/portfolio",
     element: PricingPage,
+    protected: true,
   },
   {
     path: "/pricing",
     element: PricingPage,
+    protected: true,
   },
   {
     path: "/solution-match",
     element: SolutionMatchPage,
+    protected: true,
   },
   {
     path: "/acquisition-process",
@@ -56,6 +59,7 @@ export const appRoutes: RouteConfig[] = [
   {
     path: "/contact",
     element: ContactPage,
+    protected: true,
   },
   {
     path: "/faq",
