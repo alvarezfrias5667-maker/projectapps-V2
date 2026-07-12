@@ -1,4 +1,4 @@
-      import React from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import {
@@ -200,10 +200,10 @@ export default function HomePage() {
           id="hero-display-head"
           className="max-w-5xl text-4xl font-extrabold leading-tight tracking-tight text-neutral-900 sm:text-6xl md:text-7xl"
         >
-          Explore enterprise software assets.
+          Evaluate pre-built assets.
           <br />
           <span className="font-serif font-light text-neutral-500">
-            Evaluate before building from scratch.
+            Avoid months of costly development.
           </span>
         </h1>
 
@@ -211,8 +211,7 @@ export default function HomePage() {
           id="hero-subhead"
           className="max-w-3xl text-lg font-light leading-relaxed text-neutral-500 md:text-xl"
         >
-          Explore enterprise software assets available for evaluation, acquisition, or transfer based on scope,
-          availability, and applicable commercial terms.
+          ProjectApps™ allows enterprise teams to review, test, and acquire fully-structured software assets before investing months of technical bandwidth and engineering budget. Mitigate risk and fast-track your solution by choosing to evaluate first.
         </p>
 
         <div id="hero-cta-group" className="flex flex-wrap justify-center gap-4 pt-4">
@@ -253,46 +252,123 @@ export default function HomePage() {
         id="why-projectapps"
         className="border-y border-neutral-200 bg-neutral-50 px-6 py-24 md:px-12"
       >
-        <div className="mx-auto max-w-4xl space-y-8">
-          <span className="block font-mono text-[10px] font-black uppercase tracking-widest text-neutral-400">
-            01. Evaluation before building
-          </span>
+        <div className="mx-auto max-w-6xl space-y-12">
+          <div className="space-y-4 text-center md:text-left">
+            <span className="inline-flex items-center gap-1 font-mono text-[10px] font-black uppercase tracking-widest text-neutral-400">
+              <span>01. Core Value Proposal</span>
+              <span>•</span>
+              <span className="text-neutral-900">Evaluation Before Building</span>
+            </span>
+            <h2
+              id="why-title"
+              className="text-3xl font-extrabold leading-tight tracking-tight text-neutral-950 md:text-5xl max-w-4xl"
+            >
+              The power of evaluating proven technology before coding from scratch.
+            </h2>
+          </div>
 
-          <h2
-            id="why-title"
-            className="text-3xl font-extrabold leading-tight tracking-tight text-neutral-950 md:text-5xl"
-          >
-            ProjectApps™ helps review structured digital assets before investing time and capital building
-            from scratch.
-          </h2>
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 pt-4">
+            {/* Left Column: Practical Value of Pre-Evaluation */}
+            <div className="space-y-8 border-r border-neutral-200/50 pr-0 lg:pr-12">
+              <div className="space-y-4">
+                <span className="inline-block rounded bg-neutral-900 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-white">
+                  The Opportunity
+                </span>
+                <h3 className="text-xl font-bold text-neutral-900">
+                  Why evaluate before building from scratch?
+                </h3>
+              </div>
 
-          <div className="grid grid-cols-1 gap-8 pt-4 md:grid-cols-2">
-            <p className="text-sm font-light leading-relaxed text-neutral-500 md:text-base">
-              <strong>ProjectApps™</strong> exists to reduce the evaluation and acquisition time of enterprise digital assets,
-              allowing you to review structured options before building from scratch.
-            </p>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400 font-mono">
+                    ¿Qué hace ProjectApps™?
+                  </h4>
+                  <p className="text-sm font-light leading-relaxed text-neutral-600">
+                    We host a premium, private inventory of fully-structured software assets—ranging from functional cloud platforms to structured code modules—ready for professional evaluation and acquisition.
+                  </p>
+                </div>
 
-            <p className="text-sm font-light leading-relaxed text-neutral-500 md:text-base">
-              The objective is not to promise universal software or automatic results. The objective is to facilitate a clear
-              process to explore, evaluate, and request asset availability based on actual scope.
-            </p>
+                <div className="space-y-2">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400 font-mono">
+                    ¿Por qué debería utilizarlo?
+                  </h4>
+                  <p className="text-sm font-light leading-relaxed text-neutral-600">
+                    Writing software from absolute zero is expensive, slow, and highly volatile. Exploring existing technical baselines gives you a tangible starting point, proving viability before committing key engineering resources.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-400 font-mono">
+                    ¿Qué beneficio obtengo?
+                  </h4>
+                  <p className="text-sm font-light leading-relaxed text-neutral-600">
+                    You bypass 4 to 9 months of engineering cycles, gain high-contrast clarity on structural technical debt, save up to 80% on early-stage budget, and accelerate time-to-market.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Transparency and Reality check */}
+            <div className="space-y-8 flex flex-col justify-between">
+              <div className="space-y-4">
+                <span className="inline-block rounded bg-amber-50 border border-amber-200 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-800">
+                  Transparent Framework
+                </span>
+                <h3 className="text-xl font-bold text-neutral-900">
+                  What to expect from our process
+                </h3>
+              </div>
+
+              <div className="space-y-6 bg-white border border-neutral-200 p-8 rounded-xl shadow-xs">
+                <div className="space-y-2">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-amber-700 font-mono flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                    ¿Qué no promete la plataforma?
+                  </h4>
+                  <p className="text-sm font-light leading-relaxed text-neutral-600">
+                    We do not promise magical, turn-key outcomes, zero-effort integrations, or perfect fit-for-all solutions. Software is complex and requires standard technical ownership.
+                  </p>
+                </div>
+
+                <div className="space-y-2 pt-2 border-t border-neutral-100">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-800 font-mono">
+                    A Structured Review Process
+                  </h4>
+                  <p className="text-sm font-light leading-relaxed text-neutral-600">
+                    Instead of vague promises, ProjectApps™ offers a transparent, step-by-step verification process. You inspect the source codebase, read complete technical documentation, evaluate real performance metrics, and execute transactions under comprehensive legal protection.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 bg-neutral-100/70 border border-neutral-200/50 rounded-lg text-[11px] text-neutral-500 font-light">
+                <strong>Empowering Decisions:</strong> This transparent framework allows corporate buyers and technology executives to purchase, adapt, or skip software assets with total technical and commercial clarity.
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <section id="capabilities-section" className="mx-auto max-w-6xl space-y-12 px-6 py-24 md:px-12">
-        <div className="space-y-2 text-center md:text-left">
-          <span className="block font-mono text-[10px] font-black uppercase tracking-widest text-neutral-400">
-            02. Portfolio Categories
-          </span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start border-b border-neutral-100 pb-12">
+          <div className="lg:col-span-5 space-y-3">
+            <span className="block font-mono text-[10px] font-black uppercase tracking-widest text-neutral-400">
+              02. Portfolio Categories
+            </span>
 
-          <h2 id="capabilities-title" className="text-3xl font-extrabold tracking-tight text-neutral-900">
-            Available Capabilities for Review
-          </h2>
+            <h2 id="capabilities-title" className="text-3xl font-extrabold tracking-tight text-neutral-900">
+              Available Capabilities for Review
+            </h2>
+          </div>
 
-          <p className="max-w-xl text-sm font-light text-neutral-500">
-            Each category groups enterprise software assets that can be evaluated based on need, availability, and commercial model.
-          </p>
+          <div className="lg:col-span-7 bg-neutral-50 border border-neutral-200/60 rounded-xl p-6 lg:p-8">
+            <p className="text-xs font-mono uppercase tracking-wider text-neutral-400 font-bold mb-3">
+              Understanding the Portfolio Transition
+            </p>
+            <p className="text-sm font-light leading-relaxed text-neutral-600">
+              Each asset and capability listed below can be audited, reviewed, and tested in detail. Prior to starting an acquisition process, you can verify each asset's specific technical scope, customized commercial terms, legal licenses, and present level of technical development. This ensures total alignment between the pre-built foundation and your product roadmap.
+            </p>
+          </div>
         </div>
 
         <div id="capabilities-grid" className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
