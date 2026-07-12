@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Globe, ArrowRight, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
@@ -9,7 +9,38 @@ export default function ResetPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sessionChecked, setSessionChecked] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let mounted = true;
+
+    // Check if there is an active session immediately
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (mounted) {
+        if (session) {
+          setHasSession(true);
+        }
+        setSessionChecked(true);
+      }
+    });
+
+    // Listen for auth changes to capture asynchronous session load
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (mounted) {
+        if (session) {
+          setHasSession(true);
+        }
+        setSessionChecked(true);
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -17,6 +48,11 @@ export default function ResetPasswordPage() {
 
     if (!password || !confirmPassword) {
       setError("Please complete all fields.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
       return;
     }
 
@@ -32,16 +68,33 @@ export default function ResetPasswordPage() {
       });
       if (resetError) throw resetError;
 
+      // Clear the password recovery flag and sign out from the temporary session
+      sessionStorage.removeItem("isPasswordRecovery");
+      await supabase.auth.signOut();
+
       setSubmitted(true);
       setTimeout(() => {
         navigate("/login");
-      }, 1500);
+      }, 2000);
     } catch (err: any) {
       setError(err.message || "Failed to reset password. Please try requesting a new recovery link.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (!sessionChecked) {
+    return (
+      <div id="reset-password-loading" className="min-h-[80vh] flex items-center justify-center bg-neutral-50 px-6 py-20 font-sans antialiased">
+        <div className="text-center space-y-4">
+          <div className="w-8 h-8 border-4 border-neutral-900 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-xs text-neutral-400 font-mono tracking-widest uppercase animate-pulse">
+            Verifying Recovery Session...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div id="reset-password-page" className="min-h-[80vh] flex items-center justify-center bg-neutral-50 px-6 py-20 font-sans antialiased selection:bg-neutral-900 selection:text-white">
@@ -65,7 +118,27 @@ export default function ResetPasswordPage() {
 
         {/* Enterprise Reset Card */}
         <div className="bg-white border border-neutral-200 p-8 rounded-xl shadow-xs space-y-6">
-          {!submitted ? (
+          {!hasSession ? (
+            <div className="text-center space-y-4 py-4">
+              <div className="mx-auto h-12 w-12 rounded-full bg-amber-50 flex items-center justify-center border border-amber-200">
+                <ShieldAlert className="h-5 w-5 text-amber-600" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-sm font-bold text-neutral-900">Invalid or Expired Link</h3>
+                <p className="text-xs text-neutral-500 font-light leading-relaxed">
+                  The password recovery link has expired or is invalid. Please request a new recovery link.
+                </p>
+              </div>
+              <div className="pt-2">
+                <Link
+                  to="/forgot-password"
+                  className="px-4 py-2.5 bg-neutral-950 text-white hover:bg-neutral-800 text-[10px] font-bold uppercase tracking-widest rounded-lg transition inline-flex items-center gap-1.5"
+                >
+                  Request New Link <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </div>
+          ) : !submitted ? (
             <form onSubmit={handleSubmit} className="space-y-5">
               
               <div className="space-y-1.5">
@@ -97,7 +170,7 @@ export default function ResetPasswordPage() {
               </div>
 
               {error && (
-                <p className="text-xs text-center text-amber-600 font-medium">
+                <p className="text-xs text-center text-amber-600 font-medium animate-shake">
                   {error}
                 </p>
               )}
@@ -114,7 +187,7 @@ export default function ResetPasswordPage() {
             </form>
           ) : (
             <div className="text-center space-y-4 py-4">
-              <div className="mx-auto h-12 w-12 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-200">
+              <div className="mx-auto h-12 w-12 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-200 animate-bounce">
                 <CheckCircle2 className="h-5 w-5 text-emerald-600" />
               </div>
               <div className="space-y-1">
