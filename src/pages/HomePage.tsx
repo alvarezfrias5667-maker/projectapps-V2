@@ -1,4 +1,4 @@
-import React from "react";
+      import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import {
@@ -331,7 +331,7 @@ export default function HomePage() {
                   </div>
 
                   <Link
-                    to="/solution-match"
+                    to={primaryPath}
                     className="inline-flex items-center gap-1 pt-2 text-[11px] font-black text-neutral-900 hover:underline"
                   >
                     Check availability <ArrowRight className="h-3 w-3" />
@@ -409,7 +409,7 @@ export default function HomePage() {
           </div>
 
           <Link
-            to="/pricing"
+            to={secondaryPath}
             className="inline-block whitespace-nowrap rounded bg-white px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-neutral-950 transition hover:bg-neutral-100"
           >
             View Full Portfolio
