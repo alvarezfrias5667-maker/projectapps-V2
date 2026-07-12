@@ -61,10 +61,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     // Listen for auth changes
-    const unsubscribe = authService.onAuthStateChange((currentSession) => {
+    const unsubscribe = authService.onAuthStateChange((event, currentSession) => {
       setSession(currentSession);
       const currentUser = currentSession?.user ?? null;
       setUser(currentUser);
+
+      if (event === "PASSWORD_RECOVERY") {
+        sessionStorage.setItem("isPasswordRecovery", "true");
+        window.location.replace("/reset-password");
+        return;
+      }
 
       if (currentUser) {
         localStorage.setItem("isLoggedIn", "true");
