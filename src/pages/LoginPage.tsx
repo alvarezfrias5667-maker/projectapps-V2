@@ -19,7 +19,18 @@ export default function LoginPage() {
 
   // Redirect if already authenticated
   useEffect(() => {
+    const hasRecoveryHash = window.location.hash.includes("type=recovery") || window.location.hash.includes("recovery");
+    if (!hasRecoveryHash) {
+      sessionStorage.removeItem("isPasswordRecovery");
+    }
+  }, []);
+
+  useEffect(() => {
     if (!loading && user) {
+      const isRecovering = sessionStorage.getItem("isPasswordRecovery") === "true";
+      if (isRecovering) {
+        return;
+      }
       navigate(redirectPath);
     }
   }, [user, loading, redirectPath, navigate]);
