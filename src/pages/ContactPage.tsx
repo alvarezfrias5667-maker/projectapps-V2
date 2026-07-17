@@ -41,12 +41,17 @@ Category: ${formData.categoria}
 Objective: ${formData.objetivoNegocio}
 Message: ${formData.mensaje}`;
 
-          await acquisitionService.createRequest(
-            user.id,
-            null,
-            formData.activoInteres || formData.categoria,
-            fullMessage
-          );
+       await acquisitionService.createRequest(
+    user.id,
+    null,
+    formData.activoInteres || formData.categoria,
+    fullMessage,
+    {
+      customerName: formData.nombre,
+      customerEmail: formData.correo,
+      companyName: formData.empresa
+    }
+);
         } catch (err) {
           console.error("Error logging acquisition request to Supabase database:", err);
         }
