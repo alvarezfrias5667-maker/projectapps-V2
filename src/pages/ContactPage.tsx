@@ -5,14 +5,13 @@ import {
   ArrowRight, 
   CheckCircle2, 
   Mail, 
-  Layers, 
-  Compass, 
-  FileCheck2, 
-  Radio, 
-  Send 
+  Send,
+  Loader2,
+  AlertCircle
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { acquisitionService } from "../services/acquisitionService";
+import { emailService } from "../services/emailService";
 
 export default function ContactPage() {
   const { user } = useAuth();
@@ -28,10 +27,36 @@ export default function ContactPage() {
   });
   
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (formData.nombre && formData.correo && formData.mensaje) {
+    if (!formData.nombre.trim() || !formData.correo.trim() || !formData.mensaje.trim()) {
+      setFormError("Please complete all required fields (*).");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setFormError(null);
+
+    try {
+      // Direct call to secure server API via emailService
+      const emailResult = await emailService.sendConfirmationEmail({
+        customerEmail: formData.correo.trim(),
+        customerName: formData.nombre.trim(),
+        assetName: formData.activoInteres.trim() || formData.categoria,
+        company: formData.empresa.trim(),
+        objective: formData.objetivoNegocio.trim(),
+        message: formData.mensaje.trim(),
+      });
+
+      if (!emailResult.success) {
+        setFormError(emailResult.errorMessage || "Failed to submit request to email service.");
+        setIsSubmitting(false);
+        return;
+      }
+
       if (user) {
         try {
           const fullMessage = `Name: ${formData.nombre}
@@ -41,22 +66,25 @@ Category: ${formData.categoria}
 Objective: ${formData.objetivoNegocio}
 Message: ${formData.mensaje}`;
 
-       await acquisitionService.createRequest(
-    user.id,
-    null,
-    formData.activoInteres || formData.categoria,
-    fullMessage,
-    {
-      customerName: formData.nombre,
-      customerEmail: formData.correo,
-      companyName: formData.empresa
-    }
-);
+          await acquisitionService.createRequest(
+            user.id,
+            null,
+            formData.activoInteres || formData.categoria,
+            fullMessage,
+            formData.correo,
+            formData.nombre
+          );
         } catch (err) {
-          console.error("Error logging acquisition request to Supabase database:", err);
+          console.error("Error logging acquisition request to database:", err);
         }
       }
+
       setSubmitted(true);
+    } catch (err: any) {
+      console.error("Error submitting contact form:", err);
+      setFormError(err.message || "An unexpected error occurred while submitting your request.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -182,6 +210,16 @@ Message: ${formData.mensaje}`;
                   <p className="text-xs text-neutral-500 font-light">Complete the following required fields to expedite the technical processing of your request.</p>
                 </div>
 
+                {formError && (
+                  <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-xs text-red-800 flex items-start gap-2.5">
+                    <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold">Submission Error</p>
+                      <p className="mt-0.5 leading-relaxed">{formError}</p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="nombre" className="block text-xs font-bold text-neutral-400 uppercase tracking-widest mb-2">Name <span className="text-red-500">*</span></label>
@@ -189,10 +227,11 @@ Message: ${formData.mensaje}`;
                       type="text"
                       id="nombre"
                       required
+                      disabled={isSubmitting}
                       value={formData.nombre}
                       onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                       placeholder="Your name"
-                      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded"
+                      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded disabled:opacity-60"
                     />
                   </div>
                   <div>
@@ -200,10 +239,11 @@ Message: ${formData.mensaje}`;
                     <input
                       type="text"
                       id="empresa"
+                      disabled={isSubmitting}
                       value={formData.empresa}
                       onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
                       placeholder="Organization or Corporate Entity"
-                      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded"
+                      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded disabled:opacity-60"
                     />
                   </div>
                 </div>
@@ -215,19 +255,21 @@ Message: ${formData.mensaje}`;
                       type="email"
                       id="correo"
                       required
+                      disabled={isSubmitting}
                       value={formData.correo}
                       onChange={(e) => setFormData({ ...formData, correo: e.target.value })}
                       placeholder="example@company.com"
-                      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded"
+                      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded disabled:opacity-60"
                     />
                   </div>
                   <div>
                     <label htmlFor="categoria" className="block text-xs font-bold text-neutral-400 uppercase tracking-widest mb-2">Category of Interest</label>
                     <select
                       id="categoria"
+                      disabled={isSubmitting}
                       value={formData.categoria}
                       onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}
-                      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded h-11"
+                      className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded h-11 disabled:opacity-60"
                     >
                       <option value="Revenue Intelligence™">Revenue Intelligence™</option>
                       <option value="Decision Intelligence™">Decision Intelligence™</option>
@@ -248,10 +290,11 @@ Message: ${formData.mensaje}`;
                   <input
                     type="text"
                     id="activoInteres"
+                    disabled={isSubmitting}
                     value={formData.activoInteres}
                     onChange={(e) => setFormData({ ...formData, activoInteres: e.target.value })}
                     placeholder="e.g. Ready Revenue Asset, Project ZIP in operations, etc."
-                    className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded"
+                    className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded disabled:opacity-60"
                   />
                 </div>
 
@@ -260,10 +303,11 @@ Message: ${formData.mensaje}`;
                   <input
                     type="text"
                     id="objetivoNegocio"
+                    disabled={isSubmitting}
                     value={formData.objetivoNegocio}
                     onChange={(e) => setFormData({ ...formData, objetivoNegocio: e.target.value })}
                     placeholder="Development acceleration, SaaS replacement, white label..."
-                    className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded"
+                    className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded disabled:opacity-60"
                   />
                 </div>
 
@@ -272,19 +316,31 @@ Message: ${formData.mensaje}`;
                   <textarea
                     id="mensaje"
                     required
+                    disabled={isSubmitting}
                     rows={4}
                     value={formData.mensaje}
                     onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
                     placeholder="Write any operational details or target timelines you wish to consider here..."
-                    className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded"
+                    className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 text-sm focus:outline-none focus:border-neutral-900 transition rounded disabled:opacity-60"
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
-                  className="inline-flex items-center justify-center w-full px-6 py-3.5 bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-widest transition rounded"
+                  disabled={isSubmitting}
+                  className="inline-flex items-center justify-center w-full px-6 py-3.5 bg-neutral-900 hover:bg-neutral-800 disabled:bg-neutral-400 text-white font-bold text-xs uppercase tracking-widest transition rounded cursor-pointer disabled:cursor-not-allowed gap-2"
                 >
-                  Request Availability
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Processing Request...
+                    </>
+                  ) : (
+                    <>
+                      Request Availability
+                      <Send className="h-4 w-4 ml-1" />
+                    </>
+                  )}
                 </button>
               </form>
             )}
